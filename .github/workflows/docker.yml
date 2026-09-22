@@ -6,7 +6,7 @@ on:
   
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}/devops-lab-api
+  IMAGE_NAME: okbaabdelghani/devops-lab/devops-lab-api
 
 jobs:
   build-and-push:
