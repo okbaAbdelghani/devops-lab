@@ -4,34 +4,34 @@ on:
     branches:
       - main
   
-  env:
-    REGISTRY: ghcr.io
-    IMAGE_NAME: ${{ github.repository }}/devops-lab-api
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}/devops-lab-api
 
-  jobs:
-    build-and-push:
-      runs-on: ubuntu-latest
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
 
-      permissions:
-        contents: read
-        packages: write
+    permissions:
+      contents: read
+      packages: write
 
-      steps:
-        - name: Checkout
-          uses: actions/checkout@v4
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-        - name: log in GHCR
-          uses: docker/login-action@v3
-          with:
-            registry: ${{ env.REGISTRY }}
-            username: ${{ github.actor }}
-            password: ${{ secrets.GITHUB_TOKEN }}
+      - name: log in GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-        - name: Build and Push Docker Image
-          uses: docker/build-push-action@v6
-          with:
-            context: ./api
-            push: true
-            tags: |
-              ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-              ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./api
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
