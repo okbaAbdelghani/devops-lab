@@ -1,0 +1,26 @@
+services:
+  api:
+    build: .
+    container_name: devops-api
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: devops_lab
+      DB_USER: devops
+      DB_PASSWORD: devops_password
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:16-alpine
+    container_name: devops-postgres
+    environment:
+      POSTGRES_USER: devops
+      POSTGRES_PASSWORD: devops_password
+      POSTGRES_DB: devops_lab
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
