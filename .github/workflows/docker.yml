@@ -35,3 +35,14 @@ jobs:
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+
+  deploy:
+    needs: build-and-push
+    runs-on: self-hosted
+
+    steps:
+      - name: Deploy to Ubuntu
+        run: |
+          cd ~/devops-lab
+          IMAGE_TAG=${{ github.sha }} docker compose -f compose.prod.yml pull api
+          IMAGE_TAG=${{ github.sha }} docker compose -f compose.prod.yml up -d
