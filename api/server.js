@@ -60,6 +60,30 @@ const pool = new Pool({
   password: process.env.DB_PASSWORD || "devops_password",
 });
 
+const dbPoolTotal = new client.Gauge({
+  name: "db_pool_total_connections",
+  help: "Total number of database connections in the pool",
+  registers: [register],
+});
+
+const dbPoolIdle = new client.Gauge({
+  name: "db_pool_idle_connections",
+  help: "Number of idle database connections in the pool",
+  registers: [register],
+});
+
+const dbPoolWaiting = new client.Gauge({
+  name: "db_pool_waiting_requests",
+  help: "Number of waiting requests for a database connection",
+  registers: [register],
+});
+
+setInterval(() => {
+  dbPoolTotal.set(pool.totalCount);
+  dbPoolIdle.set(pool.idleCount);
+  dbPoolWaiting.set(pool.waitingCount);
+}, 5000);
+
 app.get("/", (req, res) => {
   res.json({
     message: "Hello from my DevOps lab!",
