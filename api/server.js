@@ -126,6 +126,22 @@ app.post("/users", async (req, res) => {
   }
 });
 
+app.get("/users", async (req, res) => {
+  try {
+    const result = await pool.query(
+      "SELECT id, name, email, created_at FROM users ORDER BY id"
+    );
+
+    res.json(result.rows);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      error: "Failed to fetch users",
+    });
+  }
+});
+
 app.get("/metrics", async (req, res) => {
   try {
     res.set("Content-Type", register.contentType);
