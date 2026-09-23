@@ -3,6 +3,8 @@ const os = require("os");
 const { Pool } = require("pg");
 
 const app = express();
+app.use(express.json());
+
 const PORT = process.env.PORT || 3000;
 
 const pool = new Pool({
@@ -34,6 +36,23 @@ app.get("/health", async (req, res) => {
     res.status(500).json({
       status: "error",
       database: "disconnected",
+    });
+  }
+});
+
+app.post("/users", async (req, res) => {
+  try {
+    const { name, email } = req.body;
+    const result = await pool.query(
+      "INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *",
+      [name, email]
+    );
+
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ 
+      error: "Failed to create user" 
     });
   }
 });
