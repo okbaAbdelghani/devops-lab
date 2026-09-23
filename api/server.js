@@ -1,9 +1,14 @@
 const express = require("express");
 const os = require("os");
 const { Pool } = require("pg");
+const client = require("prom-client");
 
 const app = express();
 app.use(express.json());
+
+
+const register = new client.Registry();
+client.collectDefaultMetrics({ register });
 
 const PORT = process.env.PORT || 3000;
 
@@ -53,6 +58,18 @@ app.post("/users", async (req, res) => {
     console.error(error);
     res.status(500).json({ 
       error: "Failed to create user" 
+    });
+  }
+});
+
+app.get("/metrics", async (req, res) => {
+  try {
+    res.set("Content-Type", register.contentType);
+    res.end(await register.metrics());
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: "Failed to retrieve metrics"
     });
   }
 });
