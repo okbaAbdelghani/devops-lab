@@ -16,7 +16,16 @@ const createUser = async (req, res) => {
 
 const getUsers = async (req, res) => {
     try {
-        const users = await usersService.getUsers();
+        const limit = Math.min(
+            parseInt(req.query.limit) || 10,
+            1000
+        );
+        const offset = Math.max(
+            parseInt(req.query.offset) || 0,
+        );
+
+        const users = await usersService.getUsers(limit, offset);
+        
         res.json(users);
     } catch (error) {
         console.error("Error fetching users:", error);

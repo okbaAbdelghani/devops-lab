@@ -8,9 +8,13 @@ const createUser = async (name, email) => {
     return result.rows[0];
 };
 
-const getUsers = async () => {
+const getUsers = async (limit = 10, offset = 0) => {
     const result = await pool.query(
-        "SELECT id, name, email, created_at FROM users ORDER BY id"
+        `SELECT id, name, email, created_at 
+         FROM users 
+         ORDER BY id 
+         LIMIT $1 OFFSET $2`,
+        [limit, offset]
     );
     return result.rows;
 };
