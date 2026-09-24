@@ -26,7 +26,11 @@ const getUsers = async (req, res) => {
 
         const users = await usersService.getUsers(limit, after);
 
-        res.json(users);
+        const nextCursor = users.length > 0 ? users[users.length - 1].id : null;
+        res.json({
+            data: users,
+            nextCursor
+        });
     } catch (error) {
         console.error("Error fetching users:", error);
         res.status(500).json({
