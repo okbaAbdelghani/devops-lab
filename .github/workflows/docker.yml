@@ -9,7 +9,21 @@ env:
   IMAGE_NAME: okbaabdelghani/devops-lab/devops-lab-api
 
 jobs:
+  test:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Tests
+        run: |
+          cd api
+          docker compose up -d postgres
+          docker compose run --rm api npm test -- --runInBand
+          docker compose down
   build-and-push:
+    needs: test
     runs-on: self-hosted
 
     permissions:

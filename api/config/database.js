@@ -15,10 +15,12 @@ const {
   dbPoolWaiting,
 } = require("../monitoring/metrics");
 
-setInterval(() => {
-  dbPoolTotal.set(pool.totalCount);
-  dbPoolIdle.set(pool.idleCount);
-  dbPoolWaiting.set(pool.waitingCount);
-}, 5000);
+if (process.env.NODE_ENV !== "test") {
+  setInterval(() => {
+    dbPoolTotal.set(pool.totalCount);
+    dbPoolIdle.set(pool.idleCount);
+    dbPoolWaiting.set(pool.waitingCount);
+  }, 5000);
+}
 
 module.exports = pool;

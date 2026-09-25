@@ -20,11 +20,20 @@ const getUsers = async (req, res) => {
             parseInt(req.query.limit) || 10,
             1000
         );
+
+        if (req.query.limit !== undefined && (isNaN(limit) || limit <= 0)) {
+            return res.status(400).json({
+                error: "limit must be a positive integer"
+            });
+        }
+
+        const finalLimit = Math.min(limit || 10, 1000);
+
         const after = Math.max(
             parseInt(req.query.after) || 0, 0
         );
 
-        const users = await usersService.getUsers(limit, after);
+        const users = await usersService.getUsers(finalLimit, after);
 
         const nextCursor = users.length > 0 ? users[users.length - 1].id : null;
         res.json({
