@@ -19,9 +19,9 @@ jobs:
       - name: Run Tests
         run: |
           cd api
-          docker compose up -d postgres
-          docker compose run --rm api npm test -- --runInBand
-          docker compose down
+          docker compose -p ci-test up -d postgres
+          docker compose -p ci-test run --rm api npm test -- --runInBand
+          docker compose -p ci-test down -v
   build-and-push:
     needs: test
     runs-on: self-hosted
